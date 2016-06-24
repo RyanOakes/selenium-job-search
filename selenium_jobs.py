@@ -88,10 +88,12 @@ def main():
 
     job_description, job_zipcode = user_selects_job_search()
 
-    load_job_website(job_website, job_description, job_zipcode)
+    browser = load_job_website(job_website, job_description, job_zipcode)
 
     if restart():
         main()
+
+    browser.quit()
 
     clear()
 

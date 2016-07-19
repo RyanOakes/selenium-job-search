@@ -1,12 +1,21 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from classes import JobQuery
+
 
 job_list = [x for x in range(4)]
+
 job_sites = {
     1: 'Indeed',
     2: 'Monster',
     3: 'SimplyHired',
+}
+
+job_links = {
+    1: 'http://indeed.com',
+    2: 'http://monster.com',
+    3: 'http://simplyhired.com',
 }
 
 
@@ -46,39 +55,6 @@ def user_selects_job_search():
     return job_description, job_zipcode
 
 
-def load_job_website(job_website, job_description, job_zipcode):
-    """Creates browser object and loads the user's search parameters
-    MUST REFACTOR, way too busy."""
-
-    if job_website == 1:
-        browser = webdriver.Chrome()
-        browser.get('http://indeed.com')
-        jobs = browser.find_element_by_id('what')
-        jobs.send_keys(job_description)
-        location = browser.find_element_by_id('where').clear()
-        location = browser.find_element_by_id('where')
-        location.send_keys(job_zipcode)
-        location.send_keys(Keys.ENTER)
-
-    if job_website == 2:
-        browser = webdriver.Chrome()
-        browser.get('http://monster.com')
-        jobs = browser.find_element_by_id('q1')
-        jobs.send_keys(job_description)
-        location = browser.find_element_by_id('where1')
-        location.send_keys(job_zipcode)
-        location.send_keys(Keys.ENTER)
-
-    if job_website == 3:
-        browser = webdriver.Chrome()
-        browser.get('http://simplyhired.com')
-        jobs = browser.find_element_by_name('q')
-        jobs.send_keys(job_description)
-        location = browser.find_element_by_name('l')
-        location.send_keys(job_zipcode)
-        location.send_keys(Keys.ENTER)
-
-
 def main():
 
     clear()
@@ -88,7 +64,11 @@ def main():
 
     job_description, job_zipcode = user_selects_job_search()
 
-    browser = load_job_website(job_website, job_description, job_zipcode)
+    job_query = JobQuery(job_website, job_description, job_zipcode)
+
+    job_query.create_browser_and_search()
+
+    # browser = load_job_website(job_website, job_description, job_zipcode)
 
     if restart():
         main()
